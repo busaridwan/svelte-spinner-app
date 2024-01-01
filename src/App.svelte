@@ -1,77 +1,46 @@
 <script>
+	import { writable } from 'svelte/store';
 	import Spinner from './Spinner.svelte';
   
 	let topic = '';
 	let options = [];
-	let spinResult = null;
-	let backgroundColor = '';
+	let selectedOption = writable('');
+	let backgroundColor = 'white'; // Initial background color
   
 	function createSpinner() {
-	  // Validate that the user has entered both a topic and at least two options
-	  if (topic.trim() === '' || options.length < 2) {
-		alert('Please enter a topic and at least two options.');
-		return;
+	  if (options.length > 0) {
+		// Store topic and options (consider using a store for complex scenarios)
+		// ...
+  
+		// Conditionally render the spinner
+	  } else {
+		// Handle the case where options are missing
 	  }
-  
-	  spinResult = null;
-	  backgroundColor = '';
-  
-	  // You can shuffle the options array here if you want
 	}
   
-	function handleSpinResult(result, color) {
-	  spinResult = result;
-	  backgroundColor = color;
+	function handleSelectedOption(option) {
+	  selectedOption.set(option);
+	  backgroundColor = option.color; // Update background color
 	}
   </script>
   
-  <main>
-	<h1>Create Spinner</h1>
-	<label for="topic">Topic:</label>
-	<input type="text" bind:value={topic} id="topic" />
+  <h1>Spinner App</h1>
   
-	<label for="options">Options (comma-separated):</label>
-	<input type="text" bind:value={options} id="options" />
+  <label for="topic">Topic:</label>
+  <input type="text" id="topic" bind:value={topic} />
   
-	<button on:click={createSpinner}>Create Spinner</button>
+  <label for="options">Options:</label>
+  <textarea id="options" bind:value={options} />
   
-	{spinResult !== null && (
-	  <div>
-		<h2>Result: {spinResult}</h2>
-		<p style="background-color: {backgroundColor}; padding: 10px; border-radius: 5px;">
-		  The background color matches the radius the spinner stopped on.
-		</p>
-	  </div>
-	)}
+  <button on:click={createSpinner}>Create Spinner</button>
   
-	{spinResult === null && <Spinner on:spinResult={handleSpinResult} {options} />}
-  </main>
+  {#if options.length > 0}
+	<Spinner options={options} on:selected={handleSelectedOption} />
+  {/if}
+  
+  <p>Selected Option: {selectedOption}</p>
   
   <style>
-	main {
-	  display: flex;
-	  flex-direction: column;
-	  align-items: center;
-	  justify-content: center;
-	  height: 100vh;
-	}
-  
-	h1 {
-	  margin-bottom: 20px;
-	}
-  
-	label {
-	  margin-top: 10px;
-	}
-  
-	input {
-	  margin-bottom: 10px;
-	}
-  
-	button {
-	  margin-top: 10px;
-	  padding: 10px;
-	  cursor: pointer;
-	}
+	/* Add styles for overall app layout and background color */
   </style>
   
